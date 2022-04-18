@@ -9,30 +9,18 @@ export const RobinhoodProvider = ({ children }) => {
     const [coinSelect, setCoinSelect] = useState('DOGE')
     const [toCoin, setToCoin] = useState('')
     const [balance, setBalance] = useState('')
-  
     const [amount, setAmount] = useState('')
-  
     const { isAuthenticated, authenticate, user, logout, Moralis, enableWeb3 } = useMoralis()
   
     useEffect(() => {
       if (isAuthenticated) {
-        fetchCurrentBalance().catch(error => console.log('fetch current balance error ', error))
-      }
-
-      const fetchCurrentBalance = async () => {
         const account = user.get('ethAddress')
         let formatAccount = account.slice(0, 4) + '...' + account.slice(-4)
         setFormattedAccount(formatAccount)
         setCurrentAccount(account)
-        const currentBalance = await Moralis.Web3API.account.getNativeBalance({
-          chain: 'rinkeby',
-          address: currentAccount
-        })
-        const balanceToEth = Moralis.Units.FromWei(currentBalance.balance)
-        const formattedBalance = parseFloat(balanceToEth).toFixed(3)
-        setBalance(formattedBalance)
+        fetchCurrentBalance()
       }
-    }, [])
+    }, [isAuthenticated, currentAccount])
   
     useEffect(() => {
       if (!currentAccount) return
@@ -49,6 +37,20 @@ export const RobinhoodProvider = ({ children }) => {
         const data = await response.json()
       })()
     }, [currentAccount])
+
+      const fetchCurrentBalance = async () => {
+        try {
+          const currentBalance = await Moralis.Web3API.account.getNativeBalance({
+            chain: 'rinkeby',
+            address: currentAccount
+          })
+          const balanceToEth = Moralis.Units.FromWei(currentBalance.balance)
+          const formattedBalance = parseFloat(balanceToEth).toFixed(3)
+          setBalance(formattedBalance)
+        } catch(error) {
+          console.log('fetch current balance error ', error)
+        }
+      }
   
     const connectWallet = () => {
       authenticate()

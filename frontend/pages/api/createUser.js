@@ -1,4 +1,4 @@
-import { client } from '../../lib/sanity'
+import { client } from "../../utils/sanity"
 
 const createUser = async (req, res) => {
   try {
