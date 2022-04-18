@@ -1,5 +1,9 @@
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import { useRobinhoodContext } from '../context/RobinhoodContext'
 import { BiDotsHorizontalRounded } from 'react-icons/bi'
 import { AiOutlinePlus } from 'react-icons/ai'
+import Header from '../components/Header'
 
 const styles = {
   wrapper: 'w-screen h-screen flex flex-col',
@@ -27,7 +31,7 @@ const styles = {
 export default function Home() {
   return (
     <div className={styles.wrapper}>
-      Hello world
+      <Header />
     </div>
   )
 }
